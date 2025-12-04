@@ -1,0 +1,43 @@
+# Laravel / PHP
+/vendor
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/.idea
+/.vscode
+/.phpunit.result.cache
+Homestead.yaml
+Homestead.json
+.env
+.env.backup
+.phpunit.result.cache
+.phpunit.cache
+
+# Laravel Mix / npm / Yarn
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+package-lock.json
+yarn.lock
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Laravel compiled files
+/bootstrap/cache/*.php
+
+# IDE / Editor folders
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Optional: composer PHAR
+composer.phar
+
+# Ignore coverage reports
+coverage/
+phpunit.xml
+phpunit.xml.dist
