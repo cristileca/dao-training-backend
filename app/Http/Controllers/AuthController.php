@@ -17,32 +17,47 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        try {
+            $isFirstUser = User::count() === 0;
 
-        $isFirstUser = User::count() === 0;
+            Log::info('Is first user', ['value' => $isFirstUser]);
 
-        Log::info("is first user:", ['boolean:' => $isFirstUser]);
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:6',
+                'referral_id' => $isFirstUser
+                    ? 'nullable'
+                    : 'required|uuid|exists:users,id',
+            ]);
 
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'referral_id' => $isFirstUser ? 'nullable' : 'required|uuid|exists:users,id',
-        ]);
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'referral_id' => $validated['referral_id'] ?? null,
+            ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'referral_id' => $request->referral_id,
-        ]);
+            Auth::login($user);
 
-        Auth::login($user);
+            return response()->json([
+                'message' => 'User registered successfully',
+                'user' => $user,
+            ], 201);
+        }
+        catch (\Throwable $e) {
 
-        return response()->json([
-            'message' => 'User registered successfully',
-            'user' => $user,
-        ]);
+            Log::error('Register failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Registration failed'
+            ], 500);
+        }
     }
+
 
     /**
      * @param Request $request
@@ -54,7 +69,6 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-
 
         $user = User::whereEmail($request->email)->first();
 
