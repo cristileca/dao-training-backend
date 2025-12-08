@@ -1,20 +1,27 @@
 <?php
+
 return [
 
-'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => [
+        'api/*',
+        'login',
+        'logout',
+        'sanctum/csrf-cookie'
+    ],
 
-'allowed_methods' => ['*'], // permite GET, POST, etc.
+    'allowed_methods' => ['*'],
 
-'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => [
+        'http://localhost:3000',
+    ],
 
+    'allowed_origins_patterns' => [],
 
-'allowed_origins_patterns' => [],
+    'allowed_headers' => ['*'],
 
-'allowed_headers' => ['*'], // permite toate header-ele
+    'exposed_headers' => [],
 
-'exposed_headers' => [],
+    'max_age' => 0,
 
-'max_age' => 0,
-
-'supports_credentials' => false, // pune true dacă folosești cookies
+    'supports_credentials' => true,
 ];
