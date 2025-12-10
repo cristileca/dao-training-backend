@@ -3,11 +3,14 @@ namespace App\Models;
 
 use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
@@ -37,7 +40,7 @@ use Illuminate\Support\Carbon;
  */
 class User extends Authenticatable
 {
-    use UuidTrait, Notifiable;
+    use UuidTrait, Notifiable, HasFactory;
 
     /** @var array  */
     protected $guarded = [];
@@ -48,5 +51,16 @@ class User extends Authenticatable
     protected $casts = [
       'id' => 'string',
     ];
+
+    public function referrer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'referral_id');
+    }
+
+    public function referrals(): HasMany
+    {
+       return  $this->hasMany(User::class, 'referral_id');
+    }
+
 }
 

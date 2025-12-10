@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommissionController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -9,6 +10,7 @@ Route::middleware('auth:sanctum')->get('/user', function () {
     \Illuminate\Support\Facades\Log::debug(json_encode(auth()->user()));
     return response()->json(auth()->user());
 });
+
 
 Route::middleware([
     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
@@ -21,6 +23,10 @@ Route::middleware([
 
         Log::debug(sprintf("User: %s", json_encode(auth()->user())));
         return auth()->user();
+    });
+
+    Route::group(['prefix' => 'commissions', 'as' => 'commissions.'], static function () {
+        Route::get('/{user}', [CommissionController::class, 'commissions'])->name('index');
     });
 });
 
