@@ -11,6 +11,7 @@ use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Wallet;
 
 /**
  * @property string $id
@@ -61,6 +62,13 @@ class User extends Authenticatable
     {
        return  $this->hasMany(User::class, 'referral_id');
     }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class());
+    }
+
+
 
 }
 

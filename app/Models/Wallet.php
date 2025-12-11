@@ -26,4 +26,9 @@ class Wallet extends Model
 {
     use UuidTrait;
     protected $guarded = [];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

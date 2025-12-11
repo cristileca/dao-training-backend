@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommissionController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,6 +30,8 @@ Route::middleware([
         Route::get('/{user}', [CommissionController::class, 'commissions'])->name('index');
     });
 });
+
+Route::post('/create-wallet/{user}', [WalletController::class, 'createWallet']);
 
 Route::get("is-connected", static function () {
     if(auth()->check()) {
