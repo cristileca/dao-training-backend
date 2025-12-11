@@ -32,6 +32,7 @@ Route::middleware([
 });
 
 Route::post('/create-wallet/{user}', [WalletController::class, 'createWallet']);
+Route::get('/get-wallet/{user}', [WalletController::class, 'index']);
 
 Route::get("is-connected", static function () {
     if(auth()->check()) {
