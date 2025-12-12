@@ -36,19 +36,39 @@ class MlmService
 
     public function distributeCommissions(string $buyerId, float $packagePrice): void
     {
-        $upline = $this->getUpline($buyerId, 9); // ia toți uplines disponibili
+        $upline = $this->getUpline($buyerId, 9);
 
         if (empty($upline)) return;
 
-        $commissionTotal = $packagePrice * 0.15;
-        $perUpline = $commissionTotal / count($upline); // împărțim uniform
+        $percentages = [
+            1 => 0.07,
+            2 => 0.03,
+            3 => 0.02,
+            4 => 0.01,
+            5 => 0.01,
+            6 => 0.005,
+            7 => 0.005,
+            8 => 0.005,
+            9 => 0.005,
+        ];
 
         foreach ($upline as $data) {
+
+            $level = $data['level'];
+
+            // If level doesn't have a defined percentage → skip
+            if (!isset($percentages[$level])) {
+                continue;
+            }
+
+            $commission = $packagePrice * $percentages[$level];
+
+            // Save commission
             Commission::create([
                 'from_user_id' => $buyerId,
                 'to_user_id' => $data['user']->id,
-                'level' => $data['level'],
-                'amount' => $perUpline,
+                'level' => $level,
+                'amount' => $commission,
                 'claimed' => false,
             ]);
 
@@ -56,16 +76,24 @@ class MlmService
                 ['user_id' => $data['user']->id],
                 ['balance' => 0]
             );
-            $wallet->increment('balance', $perUpline);
+
+            $wallet->increment('balance', $commission);
         }
 
-        // platforma ia restul
+        $platformCommission = $packagePrice - array_reduce(
+                $upline,
+                fn($sum, $data) => $sum + ($percentages[$data['level']] ?? 0) * $packagePrice,
+                0
+            );
+
         $platformWallet = Wallet::firstOrCreate(
             ['user_id' => User::first()->id],
             ['balance' => 0]
         );
-        $platformWallet->increment('balance', $packagePrice * 0.85);
+
+        $platformWallet->increment('balance', $platformCommission);
     }
+
 
 
 }
