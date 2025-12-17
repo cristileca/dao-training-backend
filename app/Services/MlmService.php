@@ -36,36 +36,63 @@ class MlmService
 
     public function distributeCommissions(string $buyerId, float $packagePrice): void
     {
-        $upline = $this->getUpline($buyerId, 9); // ia toți uplines disponibili
+        $upline = $this->getUpline($buyerId, 9);
 
-        if (empty($upline)) return;
-
-        $commissionTotal = $packagePrice * 0.15;
-        $perUpline = $commissionTotal / count($upline); // împărțim uniform
-
-        foreach ($upline as $data) {
-            Commission::create([
-                'from_user_id' => $buyerId,
-                'to_user_id' => $data['user']->id,
-                'level' => $data['level'],
-                'amount' => $perUpline,
-                'claimed' => false,
-            ]);
-
-            $wallet = Wallet::firstOrCreate(
-                ['user_id' => $data['user']->id],
-                ['balance' => 0]
-            );
-            $wallet->increment('balance', $perUpline);
-        }
-
-        // platforma ia restul
-        $platformWallet = Wallet::firstOrCreate(
-            ['user_id' => User::first()->id],
+        $platformUser = \App\Models\User::orderBy('created_at')->first();
+        $platformWallet = \App\Models\Wallet::firstOrCreate(
+            ['user_id' => $platformUser->id],
             ['balance' => 0]
         );
+
+        // 85% merge direct la platforma
         $platformWallet->increment('balance', $packagePrice * 0.85);
+
+        // 15% pentru comisioane
+        $commissionPool = $packagePrice * 0.15;
+
+        // procente per nivel
+        $percentages = [
+            1 => 0.07,
+            2 => 0.03,
+            3 => 0.02,
+            4 => 0.01,
+            5 => 0.01,
+            6 => 0.004,
+            7 => 0.004,
+            8 => 0.004,
+            9 => 0.004,
+        ];
+
+        $distributed = 0;
+
+        foreach ($upline as $data) {
+            $level = $data['level'];
+
+            if (!isset($percentages[$level])) {
+                continue;
+            }
+
+            $weight = $percentages[$level] / 0.15; // ex: 0.03 / 0.15 = 20%
+            $commission = $commissionPool * $weight;
+
+            $distributed += $commission;
+
+            Commission::create([
+                'from_user_id' => $buyerId,
+                'to_user_id'   => $data['user']->id,
+                'level'        => $level,
+                'amount'       => $commission,
+                'claimed'      => false,
+            ]);
+        }
+
+        // daca nu s-au distribuit toate comisioanele, restul merge la wallet aplicație
+        $remaining = $commissionPool - $distributed;
+        if ($remaining > 0) {
+            $platformWallet->increment('balance', $remaining);
+        }
     }
+
 
 
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommissionController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,9 +28,17 @@ Route::middleware([
     });
 
     Route::group(['prefix' => 'commissions', 'as' => 'commissions.'], static function () {
-        Route::get('/{user}', [CommissionController::class, 'commissions'])->name('index');
+        Route::get('/{userId}', [CommissionController::class, 'commissions'])->name('index');
+        Route::post('/', [CommissionController::class, 'claim'])->name('claim');
     });
+    Route::group(['prefix' => 'packages', 'as' => 'packages.'], static function () {
+        Route::get('/', [PackageController::class, 'index'])->name('packages');
+        Route::post('/', [PackageController::class, 'buy'])->name('buy');
+    });
+
 });
+
+
 
 Route::post('/create-wallet/{user}', [WalletController::class, 'createWallet']);
 Route::get('/get-wallet/{user}', [WalletController::class, 'index']);

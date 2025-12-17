@@ -68,6 +68,16 @@ class User extends Authenticatable
         return $this->hasOne(Wallet::class());
     }
 
+    public function packages(){
+        return $this->hasMany(UserPackage::class);
+    }
+
+    public function transactions(){
+         return $this->hasMany(UserPackage::class);
+    }
+
+
+
 
 
 }
