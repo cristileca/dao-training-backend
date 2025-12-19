@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,11 +32,14 @@ Route::middleware([
         Route::get('/{userId}', [CommissionController::class, 'commissions'])->name('index');
         Route::post('/', [CommissionController::class, 'claim'])->name('claim');
     });
+
+
     Route::group(['prefix' => 'packages', 'as' => 'packages.'], static function () {
         Route::get('/', [PackageController::class, 'index'])->name('packages');
         Route::post('/', [PackageController::class, 'buy'])->name('buy');
     });
 
+    Route::get('/users-referrals', [UserController::class, 'tree']);
 });
 
 
