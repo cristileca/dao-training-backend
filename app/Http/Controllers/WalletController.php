@@ -22,11 +22,14 @@ class WalletController extends Controller
         return response()->json($wallet);
     }
 
-    public function createWallet(User $user)
+    public function createWallet(Request $request, User $user)
     {
-        return Wallet::firstOrCreate(
+        return Wallet::updateOrCreate(
             ['user_id' => $user->id],
-            ['balance' => 0],
+            [
+                'balance' => $request->balance,
+                'address' => $request->address,
+            ],
         );
     }
 }

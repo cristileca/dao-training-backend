@@ -12,6 +12,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id')->index();
             $table->decimal('balance', 18, 8)->default(0);
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }
