@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('packages', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->decimal('price', 10,10);
+            $table->double('price');
             $table->string('benefits')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();

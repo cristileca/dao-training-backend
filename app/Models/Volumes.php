@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use App\Traits\UuidTrait;
+use Database\Factories\VolumesFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
- * @property-read \App\Models\User|null $user
- * @method static \Database\Factories\VolumesFactory factory($count = null, $state = [])
+ * @property-read User|null $user
+ * @method static VolumesFactory factory($count = null, $state = [])
  * @method static Builder|Volumes newModelQuery()
  * @method static Builder|Volumes newQuery()
  * @method static Builder|Volumes query()
@@ -19,8 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $user_id
  * @property float $volume
  * @property float $sales
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @method static Builder|Volumes whereCreatedAt($value)
  * @method static Builder|Volumes whereId($value)
  * @method static Builder|Volumes whereSales($value)
@@ -39,7 +41,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Volumes extends Model
 {
-    /** @use HasFactory<\Database\Factories\VolumesFactory> */
+    /** @use HasFactory<VolumesFactory> */
     use HasFactory, UuidTrait;
     protected $guarded = [];
 

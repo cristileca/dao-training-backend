@@ -8,6 +8,7 @@ use App\Models\Package;
 use App\Models\UserPackage;
 use App\Models\VolumesHistory;
 use App\Services\MlmService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -18,18 +19,17 @@ class PackageController extends Controller
         return Package::query()->where('active',1)->get();
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function buy(Request $request)
     {
         $user = auth()->user();
 
-
-
-        Log::info("intraaaaaaaaa", ["user" => $user->id]);
-
-
         $package = Package::query()->whereId($request->get("package_id"))->whereActive(1)->first();
 
-        ProcessPackagePurchase::dispatch($user->id, $package->id )->onQueue('purchases');
+         ProcessPackagePurchase::dispatch($user->id, $package->id )->onQueue('purchases');
 
         if (!$package) {
             return response()->json(["message" => "Package not found"], 404);
@@ -41,9 +41,6 @@ class PackageController extends Controller
             'price' => $package->price,
             'uuid' => Str::uuid(),
         ]);
-
-        $mlmService =  new MlmService();
-        $mlmService->distributeCommissions($user->id, $package->price);
 
         return response()->json([
             'message' => 'Pachet cumpărat cu succes!',

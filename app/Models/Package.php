@@ -9,11 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
-
 /**
  * @property string $id
  * @property string $name
- * @property string $price
+ * @property float $price
  * @property string|null $benefits
  * @property int $active
  * @property Carbon|null $created_at
@@ -35,10 +34,13 @@ class Package extends Model
 {
     use HasFactory, UuidTrait;
 
+    /** @var array  */
     protected $guarded = [];
 
+    /** @var string[]  */
     protected $casts = [
         'id' => 'string',
+        'price' => 'float',
     ];
 
 }
