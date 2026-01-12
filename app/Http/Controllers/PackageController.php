@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessPackagePurchase;
+use App\Jobs\ResetVolumes;
 use App\Models\Package;
 use App\Models\UserPackage;
+use App\Models\VolumesHistory;
 use App\Services\MlmService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -21,9 +24,12 @@ class PackageController extends Controller
 
 
 
-        Log::error("intraaaaaaaaa", ["user" => $user->id]);
+        Log::info("intraaaaaaaaa", ["user" => $user->id]);
+
 
         $package = Package::query()->whereId($request->get("package_id"))->whereActive(1)->first();
+
+        ProcessPackagePurchase::dispatch($user->id, $package->id )->onQueue('purchases');
 
         if (!$package) {
             return response()->json(["message" => "Package not found"], 404);

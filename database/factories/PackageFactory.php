@@ -38,7 +38,7 @@ class PackageFactory extends Factory
                 'Increased data integrity thanks to tamper-resistant distributed ledger technology',
                 'Scalable blockchain infrastructure designed for high performance and enterprise-grade workloads',
             ]),
-            'price' => $this->faker->randomFloat(2, 10, 100),
+            'price' => $this->faker->randomFloat(10, 0, 0.01),
             'active' => true,
         ];
     }

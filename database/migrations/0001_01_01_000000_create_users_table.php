@@ -11,9 +11,12 @@ return new class extends Migration
             $table->uuid('id')->primary();      // UUID ca primary key
             $table->string('name');
             $table->string('email')->unique();
+            $table->json('user_tree')->nullable();
             $table->uuid('referral_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->double('volume')->default(0);
+            $table->double('sales')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

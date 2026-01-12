@@ -5,6 +5,7 @@ use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -51,6 +52,7 @@ class User extends Authenticatable
 
     protected $casts = [
       'id' => 'string',
+      'user_tree' => 'array',
     ];
 
     public function referrer(): BelongsTo
@@ -63,15 +65,33 @@ class User extends Authenticatable
        return  $this->hasMany(User::class, 'referral_id');
     }
 
+    public function volumesHistories(): HasMany
+    {
+        return $this->hasMany(VolumesHistory::class);
+    }
+
+    /**
+     * @return User|HasOne
+     */
     public function wallet()
     {
         return $this->hasOne(Wallet::class());
     }
 
+    public function tree(): HasOne
+    {
+        return $this->hasOne(Trees::class);
+    }
+    /**
+     * @return User|HasMany
+     */
     public function packages(){
         return $this->hasMany(UserPackage::class);
     }
 
+    /**
+     * @return User|HasMany
+     */
     public function transactions(){
          return $this->hasMany(UserPackage::class);
     }

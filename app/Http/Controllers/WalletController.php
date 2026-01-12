@@ -11,17 +11,24 @@ use Illuminate\Support\Facades\Log;
 
 class WalletController extends Controller
 {
+
     /**
+     * @param User $user
      * @return JsonResponse
      */
-
-    public function index(User $user){
+    public function index(User $user)
+    {
         $wallet = Wallet::where('user_id', $user->id)->first();
         Log::info("message",["wallet"=>$wallet]);;
 
         return response()->json($wallet);
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return Model
+     */
     public function createWallet(Request $request, User $user)
     {
         return Wallet::updateOrCreate(

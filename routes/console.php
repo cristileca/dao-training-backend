@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Console\Commands\TestConsole;
+use Illuminate\Support\Facades\Schedule;
+use App\Jobs\ResetVolumes;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+Schedule::job(ResetVolumes::dispatch())->lastDayOfMonth("22:00");
+
+Schedule::command(TestConsole::class)->daily();
+

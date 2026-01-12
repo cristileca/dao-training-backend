@@ -20,8 +20,6 @@ class AuthController extends Controller
         try {
             $isFirstUser = User::count() === 0;
 
-            Log::info('Is first user', ['value' => $isFirstUser]);
-
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
@@ -37,6 +35,7 @@ class AuthController extends Controller
                 'password' => Hash::make($validated['password']),
                 'referral_id' => $validated['referral_id'] ?? null,
             ]);
+
 
             Auth::login($user);
 

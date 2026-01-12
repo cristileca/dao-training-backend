@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('packages', function (Blueprint $table) {
+        Schema::create('trees', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->decimal('price', 10,10);
-            $table->string('benefits')->nullable();
-            $table->boolean('active')->default(true);
+            $table->foreignUuid('user_id')->constrained();
+            $table->json('user_full_tree')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('packages');
+        Schema::dropIfExists('trees');
     }
 };
