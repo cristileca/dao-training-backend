@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('volumes_histories', function (Blueprint $table) {
+        Schema::create('volume_histories', function (Blueprint $table) {
             $table->uuid('id');
             $table->foreignUuid('user_id')->index();
             $table->foreignUuid('from_user_id')->index()->nullable();
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('volumes_histories');
+        Schema::dropIfExists('volume_histories');
     }
 };
