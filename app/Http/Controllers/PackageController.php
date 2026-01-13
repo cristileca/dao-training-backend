@@ -6,7 +6,7 @@ use App\Jobs\ProcessPackagePurchase;
 use App\Jobs\ResetVolumes;
 use App\Models\Package;
 use App\Models\UserPackage;
-use App\Models\VolumesHistory;
+use App\Models\VolumeHistory;
 use App\Services\MlmService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

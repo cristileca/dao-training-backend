@@ -14,12 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property mixed $3
  * @property mixed $4
  * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder<static>|VolumesHistories newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|VolumesHistories newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|VolumesHistories query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VolumeHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VolumeHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VolumeHistory query()
  * @mixin \Eloquent
  */
-class VolumesHistories extends Model
+class VolumeHistory extends Model
 {
     use UuidTrait;
 

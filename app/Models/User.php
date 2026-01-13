@@ -65,9 +65,9 @@ class User extends Authenticatable
        return  $this->hasMany(User::class, 'referral_id');
     }
 
-    public function volumesHistories(): HasMany
+    public function volumeHistories(): HasMany
     {
-        return $this->hasMany(VolumesHistory::class);
+        return $this->hasMany(VolumeHistory::class);
     }
 
     /**

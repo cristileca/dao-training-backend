@@ -3,10 +3,10 @@
 namespace App\Jobs;
 
 use App\Models\Package;
-use App\Models\VolumesHistories;
+use App\Models\VolumeHistory;
 use App\Models\Trees;
 use App\Models\User;
-use App\Models\Volumes;
+use App\Models\Volume;
 use App\Services\BC;
 use App\Services\MlmService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -44,16 +44,16 @@ class ProcessPackagePurchase implements ShouldQueue
         /** @var Trees $tree */
         $tree = Trees::whereUserId($this->user_id)->first();
 
-        /** @var Volumes $userVolume */
-        $userVolume = Volumes::whereUserId($user->id)->where('start', '=', $startOfMonth)->firstOrCreate(['user_id' => $user->id],
+        /** @var Volume $userVolume */
+        $userVolume = Volume::whereUserId($user->id)->where('start', '=', $startOfMonth)->firstOrCreate(['user_id' => $user->id],
             ['start' => $startOfMonth, 'end' => $endOfMonth],
         );
         Log::info("User tree", ["tree" => $tree->user_full_tree]);
 
 
         foreach ($tree->user_full_tree as $userId) {
-            /** @var Volumes $volume */
-            $volume = Volumes::firstOrCreate(['user_id' => $userId, 'start' => $startOfMonth],
+            /** @var Volume $volume */
+            $volume = Volume::firstOrCreate(['user_id' => $userId, 'start' => $startOfMonth],
                 ['start' => $startOfMonth, 'end' => $endOfMonth],
             );
 
@@ -67,7 +67,7 @@ class ProcessPackagePurchase implements ShouldQueue
                 ]);
                 $userNewVolume = $package->price + $volume->sales;
 
-                VolumesHistories::create([
+                VolumeHistory::create([
                     'user_id' => $userId,
                     'from_user_id' => $user->id,
                     'volume_id' => $volume->id,
@@ -84,7 +84,7 @@ class ProcessPackagePurchase implements ShouldQueue
 
                 $userNewVolume = $package->price + $volume->volume;
 
-                VolumesHistories::create([
+                VolumeHistory::create([
                     'user_id' => $user->id,
                     'from_user_id' => $user->id,
                     'volume_id' => $volume->id,

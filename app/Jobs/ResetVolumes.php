@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\User;
-use App\Models\Volumes;
+use App\Models\Volume;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -29,9 +29,9 @@ class ResetVolumes implements ShouldQueue
         $users = User::all();
 
         foreach ($users as $user) {
-            $volume = Volumes::where('id', $user->id)->delete();
+            $volume = Volume::where('id', $user->id)->delete();
 
-            Volumes::update([
+            Volume::update([
                 'volume' => $volume + $user->volume,
                 'sales' => $volume + $user->sales,
             ]);
