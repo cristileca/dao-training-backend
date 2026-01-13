@@ -90,7 +90,7 @@ class ProcessPackagePurchase implements ShouldQueue
                     'volume_id' => $volume->id,
                     'price' => $package->price,
                     'type' => 'infinity',
-                    'old' => $package->price,
+                    'old' => $package->price ?? 0,
                     'new' => $userNewVolume,
                 ]);
 
