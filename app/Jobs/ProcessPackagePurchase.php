@@ -48,8 +48,6 @@ class ProcessPackagePurchase implements ShouldQueue
         $userVolume = Volume::whereUserId($user->id)->where('start', '=', $startOfMonth)->firstOrCreate(['user_id' => $user->id],
             ['start' => $startOfMonth, 'end' => $endOfMonth],
         );
-        Log::info("User tree", ["tree" => $tree->user_full_tree]);
-
 
         foreach ($tree->user_full_tree as $userId) {
             /** @var Volume $volume */
@@ -60,8 +58,6 @@ class ProcessPackagePurchase implements ShouldQueue
             $oldVolume = $userVolume->volume;
 
             if ($userId !== $user->id) {
-                Log::info("Main user and refferals: ", ["main" => $user->id, "referals"=> $userId]);
-
                 $volume->update([
                     'sales' => $package->price + $volume->sales,
                 ]);
@@ -96,15 +92,11 @@ class ProcessPackagePurchase implements ShouldQueue
 
             }
 
-            Log::info("User volume", [ "new volume" => $userNewVolume]);
-
         }
 
         $mlmService =  new MlmService();
         $mlmService->distributeCommissions($user->id, $package->price);
 
-
-        Log::info('JOB PROCESS PACKAGE PURCHASE', ['package_id' => $package->id, 'user_id' => $user->id, 'tree' => $tree->user_full_tree]);
 
     }
 }

@@ -30,6 +30,11 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Commission whereToUserId($value)
  * @method static Builder<static>|Commission whereUpdatedAt($value)
  * @mixin Builder
+ * @property string $volume_uuid
+ * @property float $price
+ * @method static Builder<static>|Commission wherePrice($value)
+ * @method static Builder<static>|Commission whereVolumeUuid($value)
+ * @mixin Builder
  */
 class Commission extends Model
 {
@@ -48,6 +53,11 @@ class Commission extends Model
     public function fromUser()
     {
         return $this->belongsTo(User::class, 'from_user_id');
+    }
+
+    public function volume()
+    {
+        return $this->belongsTo(Volume::class, 'volume_id');
     }
 }
 

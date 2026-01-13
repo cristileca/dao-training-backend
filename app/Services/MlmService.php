@@ -2,8 +2,10 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\Volume;
 use App\Models\Wallet;
 use App\Models\Commission;
+use Illuminate\Support\Facades\Log;
 
 class MlmService
 {
@@ -11,6 +13,7 @@ class MlmService
     {
         $levels = [];
 
+        /** @var User $current */
         $current = User::find($userId);
 
         for($level = 1; $level <= $maxLevel; $level++)
@@ -38,14 +41,19 @@ class MlmService
     {
         $upline = $this->getUpline($buyerId, 9);
 
-        $platformUser = \App\Models\User::orderBy('created_at')->first();
-        $platformWallet = \App\Models\Wallet::firstOrCreate(
+        /** @var User $platformUser */
+
+        $platformUser = User::orderBy('created_at')->first();
+        $platformWallet = Wallet::firstOrCreate(
             ['user_id' => $platformUser->id],
             ['balance' => 0]
         );
 
         // 85% merge direct la platforma
         $platformWallet->increment('balance', $packagePrice * 0.85);
+
+        /** @var Volume $volume */
+        $volume = Volume::whereUserId($buyerId)->first();
 
         // 15% pentru comisioane
         $commissionPool = $packagePrice * 0.15;
@@ -82,6 +90,8 @@ class MlmService
                 'to_user_id'   => $data['user']->id,
                 'level'        => $level,
                 'amount'       => $commission,
+                'price'        => $packagePrice,
+                'volume_uuid'  => $volume->id,
                 'claimed'      => false,
             ]);
         }
@@ -92,7 +102,4 @@ class MlmService
             $platformWallet->increment('balance', $remaining);
         }
     }
-
-
-
 }

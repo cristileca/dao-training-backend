@@ -39,10 +39,8 @@ class CommissionController extends Controller
 
         $userId = $request["userId"];
 
-        Log::info(`userId = ${userId}`);
         $commissions = Commission::query()->whereToUserId($userId)->where('claimed',0)->get();
 
-        Log::info($commissions);
         return response()->json($commissions);
     }
 
@@ -59,8 +57,6 @@ class CommissionController extends Controller
         if (!$commission) {
             return response()->json(['message' => 'Commission not found'], 404);
         }
-
-        Log::info('userId = ' . $user->id . ', commissionId = ' . $commission->id);
 
         if ($commission->to_user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -89,7 +85,6 @@ class CommissionController extends Controller
     protected function claimAll(Request $request):JsonResponse
     {
         $user = $request->user();
-
         $commissions = Commission::query()->whereToUserId($user->id)->whereClaimed(false)->get();
 
         if($commissions->isEmpty()){
