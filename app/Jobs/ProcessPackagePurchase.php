@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Package;
-use App\Models\Transactions;
+use App\Models\VolumesHistories;
 use App\Models\Trees;
 use App\Models\User;
 use App\Models\Volumes;
@@ -53,7 +53,7 @@ class ProcessPackagePurchase implements ShouldQueue
 
         foreach ($tree->user_full_tree as $userId) {
             /** @var Volumes $volume */
-            $volume = Volumes::whereUserId($userId)->where('start', '=', $startOfMonth)->firstOrCreate(['user_id' => $userId],
+            $volume = Volumes::firstOrCreate(['user_id' => $userId, 'start' => $startOfMonth],
                 ['start' => $startOfMonth, 'end' => $endOfMonth],
             );
 
@@ -67,11 +67,12 @@ class ProcessPackagePurchase implements ShouldQueue
                 ]);
                 $userNewVolume = $package->price + $volume->sales;
 
-                Transactions::create([
+                VolumesHistories::create([
                     'user_id' => $userId,
                     'from_user_id' => $user->id,
                     'volume_id' => $volume->id,
                     'price' => $package->price,
+                    'type' => 'personal',
                     'old' => $oldVolume,
                     'new' => $userNewVolume,
                 ]);
@@ -83,11 +84,12 @@ class ProcessPackagePurchase implements ShouldQueue
 
                 $userNewVolume = $package->price + $volume->volume;
 
-                Transactions::create([
+                VolumesHistories::create([
                     'user_id' => $user->id,
                     'from_user_id' => $user->id,
                     'volume_id' => $volume->id,
                     'price' => $package->price,
+                    'type' => 'infinity',
                     'old' => $package->price,
                     'new' => $userNewVolume,
                 ]);
