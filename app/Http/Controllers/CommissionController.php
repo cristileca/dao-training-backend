@@ -39,6 +39,8 @@ class CommissionController extends Controller
 
         $userId = $request["userId"];
 
+         Log::info("commissions request", ["request" => $userId]);
+
         $commissions = Commission::query()->whereToUserId($userId)->where('claimed',0)->get();
 
         return response()->json($commissions);

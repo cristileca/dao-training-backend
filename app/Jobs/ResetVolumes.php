@@ -26,24 +26,21 @@ class ResetVolumes implements ShouldQueue
      */
     public function handle(): void
     {
-        $users = User::all();
+        Volume::chunk(500, function ($volumes) {
+            foreach ($volumes as $volume) {
 
-        foreach ($users as $user) {
-            $volume = Volume::where('id', $user->id)->delete();
+//                $volume = Volume::firstOrCreate(
+//                    ['user_id' => $user->id],
+//                    ['volume' => 0, 'sales' => 0]
+//                );
+//
+//                $volume->increment('volume', $user->volume);
+//                $volume->increment('sales', $user->sales);
 
-            Volume::update([
-                'volume' => $volume + $user->volume,
-                'sales' => $volume + $user->sales,
-            ]);
-
-            $active_user = User::where('id', $user->id);
-
-            $active_user->update(
-                [
+                $volume->update([
                     'volume' => 0,
                     'sales' => 0,
-                ]
-            );
-        }
-    }
-}
+                ]);
+            }
+        });
+    }}

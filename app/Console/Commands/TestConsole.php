@@ -28,4 +28,9 @@ class TestConsole extends Command
     {
         dispatch(new ResetVolumes());
     }
+
+    protected function schedule($schedule): void
+    {
+        $schedule->job(new ResetVolumes)->everyMinute();
+    }
 }
